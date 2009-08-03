@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>VZ Wiki</title>
+    </head>
+    <body class="l1 wide equal">
+        <div id="container">
+            <div id="header">
+                <div class="content">
+                    <h1>VZ Wiki</h1>
+                    <h2>{% block page_title %}{% endblock %}</h2>
+                    <link href="{{ MEDIA_URL }}css/tripoli/tripoli.css" rel="stylesheet">
+                    {% if messages %}
+                        {% for message in messages %}
+                    <p class="message">{{ message }}</p>
+                        {% endfor %}
+                {% endif %}
+                </div>
+            </div>
+            <div id="primary">
+                <div class="content">
+                {% block page_body %}{% endblock %}
+                </div>
+            </div>
+            <div id="secondary">
+                <div class="content">
+                    <ul>
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url logout %}" title="logout">Logout</a></li>
+                        {% else %}
+                        <li><a href="{% url login %}" title="login">Login</a></li>
+                        {% endif %}
+                    </ul>
+                    {% include "wiki_menu.html" %}
+                    <ul>
+                        {% block vz_wiki_page_options %}{% endblock %}
+                    </ul>
+                </div>
+            </div>
+            <div id="footer">
+                <div class="content">
+                
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

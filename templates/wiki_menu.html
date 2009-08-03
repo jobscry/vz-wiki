@@ -1,0 +1,6 @@
+<ul>
+    <li><a href="{% url page_list %}" title="page list">Page List</a></li>
+    {% if perms.page.can_add %}
+    <li><a href="{% url create_page %}" title="create a page">Create a Page</a></li>
+    {% endif %}
+</ul>

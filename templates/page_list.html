@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block page_title %}Index{% endblock %}
+
+{% block page_body %}
+<h3>{{ page_list.count }} page{{ page_list.count|pluralize }}</h3>
+<ol>
+{% for page in page_list %}
+    <li><a href="{{ page.get_absolute_url }}" title="{{ page }}">{{ page }}</a></li>
+{% endfor %}
+</ol>
+{% endblock %}

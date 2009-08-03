@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% load markup %}
+
+{% block page_title %}Create Page{% endblock %}
+
+{% block page_body %}
+<h3>Create page</h3>
+<form method="POST" action="{% url create_page %}">
+{{ form.as_p }}
+<p><input type="submit" value="Create"></p>
+{% endblock %}

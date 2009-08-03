@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load markup %}
+
+{% block page_title %}Editing Page &gt; {{ page.title }}{% endblock %}
+
+{% block vz_wiki_page_options %}
+    {% if perms.page.can_change and page.is_editable and page.is_checked_out %}
+        {% ifequal page.who_checked_out user %}
+<li><a href="{% url abandon_revision page.unpublished_revision.pk %}" title="abandon revision">Abandon Revision</a></li>
+        {% endifequal %}
+    {% endif %}
+{% endblock %}
+
+{% block page_body %}
+<h3>Edit Page</h3>
+<form method="POST" action="{% url edit_page page.pk %}">
+{{ form.as_p }}
+<p><input type="submit" value="Save"></p>
+{% endblock %}
