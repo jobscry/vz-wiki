@@ -149,8 +149,14 @@ pre_save.connect(check_page_unpublished_revisions, sender=Page)
 
 def check_revision_already_published(sender, instance, **kwargs):
     """Published revisions can not be unpublished"""
-    if instance.pk and not instance.is_published and Revision.objects.filter(pk=instance.pk, is_published=True).count() > 0:
-        raise AlreadyPublishedRevision
+    if instance.pk != None:
+        if instance.is_published:
+            try:
+                Revision.objects.get(pk=instance.pk, is_published=True)
+            except Revision.DoesNotExist:
+                return
+            raise AlreadyPublishedRevision
+                
 pre_save.connect(check_revision_already_published, sender=Revision)
 
 def update_published_on(sender, instance, **kwargs):
