@@ -6,7 +6,7 @@ import tagging
 from tagging.fields import TagField
 
 import datetime
-
+import difflib
 
 class Page(models.Model):
     """
@@ -68,6 +68,21 @@ class Page(models.Model):
         except Revision.DoesNotExist:
             return None
 
+    def compare(self, rev1, rev2, display_type='inline'):
+        if rev1 == rev2:
+            raise ComparingSameRevision
+        revisions = Revision.objects.filter(page=self, pk__in=sorted([rev1, rev2]))
+        if revisions.count() != 2:
+            raise RevisionDoesNotExist
+
+        comparison, created = Comparison.objects.get_or_create(
+            page=self,
+            rev1=revisions[0],
+            rev2=revisions[1],
+            display_type=display_type
+        )
+        return comparison
+        
     @models.permalink
     def get_absolute_url(self):
         return ('page_detail', (), { 'slug': self.slug })
@@ -157,5 +172,40 @@ def update_published_on(sender, instance, **kwargs):
             instance.published_on = published_on
             instance.number = number
 
-
 pre_save.connect(update_published_on, sender=Revision)
+
+class Comparison(models.Model):
+    DISPLAY_TYPE_CHOICES = (
+        (u'inline', 'Inline'),
+        (u'table', 'Table'),    
+    )
+
+    page = models.ForeignKey(Page)
+    rev1 = models.ForeignKey(Revision, related_name='rev1')
+    rev2 = models.ForeignKey(Revision, related_name='rev2')
+    display_type = models.CharField(max_length='6', choices=DISPLAY_TYPE_CHOICES, default='inline')
+    diff_text = models.TextField(default='blank')
+
+def comparison_calculate_diff(sender, instance, created, **kwargs):
+    if created:
+        instance.diff_text = calculate_inline_diff(instance.rev1.body, instance.rev2.body)
+        instance.save()
+        
+post_save.connect(comparison_calculate_diff, sender=Comparison)
+
+def calculate_inline_diff(text1, text2):
+    """from http://stackoverflow.com/questions/774316/python-difflib-highlighting-differences-inline/788780#788780"""
+    seqm = difflib.SequenceMatcher(None, text1, text2)
+    output = []
+    for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
+        if opcode == 'equal':
+            output.append(seqm.a[a0:a1])
+        elif opcode == 'insert':
+            output.append('<ins>'+seqm.b[b0:b1]+'</ins>')
+        elif opcode == 'delete':
+            output.append('<del>'+seqm.a[a0:a1]+'</del>')
+        elif opcode == 'replace':
+            pass
+        else:
+            raise RuntimeError, "unexpected code"
+    return u''.join(output)

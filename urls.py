@@ -6,6 +6,11 @@ urlpatterns = patterns('vz_wiki.views',
     url(r'^page/edit/(?P<page_id>\d+)/$', 'edit_page', name='edit_page'),
     url(r'^page/abandon/(?P<revision_id>\d+)/$', 'abandon_revision', name='abandon_revision'),
     url(r'^page/history/(?P<page_id>\d+)/$', 'page_history', name='page_history'),
+    url(
+        r'^page/compare/revisions/(?P<page_id>\d+)/$',
+        'compare_revisions',
+        name='compare_revisions'
+    ),
 )
 
 urlpatterns += patterns('django.views.generic',
