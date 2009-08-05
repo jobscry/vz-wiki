@@ -1,17 +1,21 @@
 from django.contrib.auth.decorators import permission_required
-from django.http import HttpResponseForbidden, HttpResponseBadRequest
+from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from vz_wiki.models import Page, Revision
 from vz_wiki.forms import PageForm, RevisionForm
+from vz_wiki.exceptions import RevisionDoesNotExist
 
 def compare_revisions(request, page_id):
     page = get_object_or_404(Page, pk=page_id)
     rev1 = request.GET.get('rev1', None)
     rev2 = request.GET.get('rev2', None)
-    if rev1 == rev2:
+    if rev1 is None or rev2 is None:
         return HttpResponseBadRequest('Missing rev1 and rev2.')
-    comparison = page.compare(rev1, rev2)
+    try:
+        comparison = page.compare(rev1, rev2)
+    except RevisionDoesNotExist:
+        raise Http404
     return render_to_response(
         'compare_revisions.html',
         {
