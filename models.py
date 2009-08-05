@@ -29,6 +29,12 @@ class Page(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     
     def check_out(self, user):
+        """
+        Before checking a page out, check if page is already checked out.  If
+        the page is already checked out, raise PageAlreadyCheckedOut exception.
+        
+        If the page isn't checked out, create a skeleton revision, check out page.
+        """
         if self.is_checked_out:
             raise PageAlreadyCheckedOut
         revision = Revision.objects.create(
@@ -41,6 +47,10 @@ class Page(models.Model):
         return revision
 
     def check_in(self):
+        """
+        When model is saved a pre_save signal will throw a UnpublishedRevisionExists
+        exception if the unpublished revision isn't published or abandoned first.
+        """
         self.is_checked_out = False
         self.save()
     
