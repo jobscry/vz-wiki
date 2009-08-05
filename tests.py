@@ -26,6 +26,7 @@ class WikiTestCase(unittest.TestCase):
         self.assertEquals(latest.number, 1)
         self.assertEquals(latest.is_published, True)
         self.assertEquals(unpublished, None)
+        self.assertEquals(self.page.history().count(), 1)
         
         self.page.check_out(user=self.user)
         latest = self.page.latest_revision()
@@ -40,6 +41,7 @@ class WikiTestCase(unittest.TestCase):
         self.assertRaises(UnpublishedRevisionExists, self.page.check_in)
         unpublished.publish()
         self.assertEquals(self.page.is_checked_out, False)
+        self.assertEquals(self.page.history().count(), 2)
         
         self.assertEquals(self.page.count_revisions(), 2)
         self.assertEquals(self.page.unpublished_revision(), None)

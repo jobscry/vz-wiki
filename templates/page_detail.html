@@ -13,10 +13,10 @@
 <li><a href="{% url edit_page page.pk %}" title="continue editing page">Continue Editing Page</a></li>
         {% endifequal %}
     {% endif %}
+<li><a href="{% url page_history page.pk %}" title="page history">Page History</a></li>
 {% endblock %}
 
 {% block page_body %}
-<h3>{{ page.title }}</h3>
 <div class="page-info">
     <p>Created on: {{ page.created_on|date }}.  Current version is {{ page.latest_revision.number }}.</p>
     <p>Page is {% if not page.is_editable %}not{% endif %} editable.</p>

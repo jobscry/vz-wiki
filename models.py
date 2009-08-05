@@ -50,6 +50,9 @@ class Page(models.Model):
         except Revision.DoesNotExist:
             return None
 
+    def history(self):
+        return Revision.objects.filter(page=self, is_published=True).order_by('-published_on')
+
     def unpublished_revision(self):
         try:
             return Revision.objects.filter(page=self, is_published=False).latest('created_on')

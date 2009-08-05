@@ -5,6 +5,15 @@ from django.template import RequestContext
 from vz_wiki.models import Page, Revision
 from vz_wiki.forms import PageForm, RevisionForm
 
+def page_history(request, page_id):
+    page = get_object_or_404(Page, pk=page_id)
+    return render_to_response(
+        'page_history.html',
+        { 'page': page, },
+        context_instance=RequestContext(request)
+    ) 
+    
+
 def abandon_revision(request, revision_id):
     revision = get_object_or_404(Revision, pk=revision_id, is_published=False)
     if revision.author != request.user:
