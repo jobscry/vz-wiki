@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ page.title }}{% endblock %}
+
+{% block page_body %}
+<h3>History</h3>
+<ul>
+{% for revision in page.history %}
+    <li>{{ revision }} by {{ revision.author }} on {{ revision.published_on|date }}</li>
+{% endfor %}
+</ol>
+{% endblock %}
