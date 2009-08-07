@@ -201,10 +201,16 @@ class Comparison(models.Model):
     rev2 = models.ForeignKey(Revision, related_name='rev2')
     display_type = models.CharField(max_length='6', choices=DISPLAY_TYPE_CHOICES, default='inline')
     diff_text = models.TextField(default='blank')
+    
+    def __unicode__(self):
+        return u'%s: [%s] %s vs %s' % (self.page.title, self.display_type, self.rev1.pk, self.rev2.pk)
 
 def comparison_calculate_diff(sender, instance, created, **kwargs):
     if created:
-        instance.diff_text = calculate_inline_diff(instance.rev1.body, instance.rev2.body)
+        if instance.display_type == 'inline':
+            instance.diff_text = calculate_inline_diff(instance.rev1.body, instance.rev2.body)
+        else:
+            instance.diff_text = calculate_table_diff(instance.rev1.body, instance.rev2.body)
         instance.save()
         
 post_save.connect(comparison_calculate_diff, sender=Comparison)
@@ -225,3 +231,10 @@ def calculate_inline_diff(text1, text2):
         else:
             raise RuntimeError, "unexpected code"
     return u''.join(output)
+
+def calculate_table_diff(text1, text2):
+    """
+    TODO:  table doesn't wrap, is this a Python problem?
+    """
+    html_differ = difflib.HtmlDiff(wrapcolumn=10)
+    return html_differ.make_table(text1.splitlines(), text2.splitlines())

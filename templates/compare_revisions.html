@@ -2,6 +2,10 @@
 
 {% load markup %}
 
+{% block extra_css %}
+<link href="{{ MEDIA_URL }}css/vz_wiki.css" rel="stylesheet">
+{% endblock %}
+
 {% block page_title %}
 {{ page.title }} &gt; #{{ comparison.rev1.pk }} vs. #{{ comparison.rev2.pk }}
 {% endblock %}
