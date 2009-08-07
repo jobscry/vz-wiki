@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load markup %}
+{% load markup wiki_tags %}
 
 {% block extra_css %}
 <link href="{{ MEDIA_URL }}css/vz_wiki.css" rel="stylesheet">
@@ -15,5 +15,7 @@
 {% endblock %}
 
 {% block page_body %}
-{{ comparison.diff_text|safe|markdown }}
+
+{{ comparison.diff_text|sanitize:'ins del'|markdown }}
+
 {% endblock %}
