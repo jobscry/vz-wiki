@@ -12,6 +12,7 @@
 
 {% block vz_wiki_page_options %}
 <li><a href="{% url page_detail page.slug %}" title="return to page">Return to Page</a></li>
+<li><a href="{% url page_history page.pk %}" title="return to page">Return to Page History</a></li>
 {% endblock %}
 
 {% block page_body %}
