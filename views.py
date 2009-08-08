@@ -7,6 +7,19 @@ from vz_wiki.forms import PageForm, RevisionForm
 from vz_wiki.exceptions import RevisionDoesNotExist
 
 def compare_revisions(request, page_id):
+    """
+    Compare revisions from page using Python's Difflib.
+    
+    Page is page_id, revision number to compare are from GET.  Revision numbers
+    are rev1 and rev2.
+    
+    Templates: ``compare_revisions.html``
+    Context:
+        page
+            Page object
+        comparision
+            Comparision object from page, rev1 and rev2
+    """
     page = get_object_or_404(Page, pk=page_id)
     rev1 = request.GET.get('rev1', None)
     rev2 = request.GET.get('rev2', None)
@@ -26,6 +39,14 @@ def compare_revisions(request, page_id):
     )     
 
 def page_history(request, page_id):
+    """
+    List of page history.
+    
+    Templates: ``page_history.html``
+    Context:
+        page
+            Page object
+    """
     page = get_object_or_404(Page, pk=page_id)
     return render_to_response(
         'page_history.html',
@@ -35,6 +56,15 @@ def page_history(request, page_id):
     
 
 def abandon_revision(request, revision_id):
+    """
+    Abandons revision, deletes it without publishing it.
+    
+    Redirects to revision's parent page.
+    
+    Templates: none
+    Context:
+        none
+    """
     revision = get_object_or_404(Revision, pk=revision_id, is_published=False)
     if revision.author != request.user:
         return HttpResponseForbidden('You cannot abandon this revision, it does not belong to you.')
@@ -47,6 +77,19 @@ def abandon_revision(request, revision_id):
 abandon_revision = permission_required('vz_wiki.page.can_change')(abandon_revision)
 
 def edit_page(request, page_id):
+    """
+    Creates/saves/publishes a page's revision.
+    
+    If page is checked out and current user isn't the "checker outer", don't allow
+    edit.  Otherwise open the Page.unpublished_revision().
+    
+    Templates: ``edit_page.html``
+    Context:
+        page
+            Page object
+        form
+            RevisionForm ojbect
+    """
     page = get_object_or_404(Page, pk=page_id)
     if page.is_checked_out:
         if page.who_checked_out() != request.user:
@@ -81,6 +124,14 @@ def edit_page(request, page_id):
 edit_page = permission_required('vz_wiki.page.can_change')(edit_page)    
 
 def create_page(request):
+    """
+    Creates a new page.
+    
+    Templates: ``create_page.html``
+    Context:
+        form
+            PageForm object
+    """
     if request.method == 'POST':
         form = PageForm(request.POST)
         if form.is_valid():

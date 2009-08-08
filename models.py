@@ -136,6 +136,7 @@ class Revision(models.Model):
         unique_together = ("page", "number")
 
 def create_first_revision(sender, instance, created, **kwargs):
+    """Creates a "blank" revision for a new page."""
     if created:
         Revision.objects.create(
             page=instance,
@@ -143,19 +144,16 @@ def create_first_revision(sender, instance, created, **kwargs):
             body="hello world!",
             is_published=True,
         )
-post_save.connect(create_first_revision, sender=Page)
 
 def check_page_already_checked_out(sender, instance, **kwargs):
+    """Checks to see if page is checked out, can't be checked out again."""
     if instance.is_checked_out and Page.objects.filter(pk=instance.pk, is_checked_out=True).count() > 0:
         raise PageAlreadyCheckedOut
    
-pre_save.connect(check_page_already_checked_out, sender=Page)
-
 def check_page_unpublished_revisions(sender, instance, **kwargs):
     """Before a page is checked in there can be no unpublished revisions"""
     if not instance.is_checked_out and Revision.objects.filter(page=instance, is_published=False).count() > 0:
         raise UnpublishedRevisionExists
-pre_save.connect(check_page_unpublished_revisions, sender=Page)
 
 def check_revision_already_published(sender, instance, **kwargs):
     """Published revisions can not be unpublished"""
@@ -167,9 +165,8 @@ def check_revision_already_published(sender, instance, **kwargs):
                 return
             raise AlreadyPublishedRevision
                 
-pre_save.connect(check_revision_already_published, sender=Revision)
-
 def update_published_on(sender, instance, **kwargs):
+    """If page goes from not published to published, update published_on date."""
     published_on = datetime.datetime.now()
     latest = instance.page.latest_revision()
 
@@ -188,6 +185,10 @@ def update_published_on(sender, instance, **kwargs):
             instance.published_on = published_on
             instance.number = number
 
+post_save.connect(create_first_revision, sender=Page)
+pre_save.connect(check_page_already_checked_out, sender=Page)
+pre_save.connect(check_page_unpublished_revisions, sender=Page)
+pre_save.connect(check_revision_already_published, sender=Revision)
 pre_save.connect(update_published_on, sender=Revision)
 
 class Comparison(models.Model):
