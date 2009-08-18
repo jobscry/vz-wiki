@@ -1,0 +1,72 @@
+:mod:`vz_wiki` Models
+=====================
+
+.. module:: vz_wiki
+
+Page
+^^^^
+.. class:: models.Page
+
+Pages are the main concept of a wiki.
+
+Fields
+~~~~~~
+
+.. class:: models.Page 
+
+   :class:`~vz_wiki.models.Page` objects have the following fields:
+
+   .. attribute:: models.Page.title
+
+      Required. Title is the main identifier for the page.
+
+      * `CharField <http://docs.djangoproject.com/en/dev/ref/models/fields/#charfield>`_
+      * max_length is 255
+      * must be unique
+
+   .. attribute:: models.Page.slug
+
+      Required. Slug is used for the URL for each page.
+
+      * `SlugField <http://docs.djangoproject.com/en/dev/ref/models/fields/#slugfield>`_
+      * must be unique
+
+   .. attribute:: models.Page.tags
+
+      Required. A TagField.  See :ref:`django-tagging-dep`.
+
+   .. attribute:: models.Page.creator
+
+      A User from `Django's auth <http://docs.djangoproject.com/en/dev/topics/auth/#users>`_
+
+   .. attribute:: models.Page.is_editable
+   
+      A page can be locked to disable editing.  This is an administrative function
+      for those ``what if?`` situations.
+   
+      * `BooleanField <http://docs.djangoproject.com/en/dev/ref/models/fields/#booleanField>`_
+
+   .. attribute:: models.Page.is_checked_out
+   
+      A page is locked once checked out.
+   
+      * `BooleanField <http://docs.djangoproject.com/en/dev/ref/models/fields/#booleanField>`_
+
+   .. attribute:: models.Page.created_on
+   
+      Datetime object for when page was created.
+   
+      * `DateTimeField <http://docs.djangoproject.com/en/dev/ref/models/fields/#datetimefield>`_
+
+Methods
+~~~~~~~
+
+.. class:: models.Page
+
+   :class:`~vz_wiki.models.Page` objects have the following methods:
+   
+   .. method:: models.Page.check_out(user)
+
+      Checks out a page
+
+      :param user: User object that is checking out the page      

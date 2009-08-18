@@ -1,0 +1,36 @@
+:mod:`vz_wiki` Page
+====================
+
+.. module:: vz_wiki
+
+.. class:: models.Page
+
+Pages are the main concept of a wiki.
+
+Fields
+^^^^^^
+
+.. class:: models.Page 
+
+   .. attribute:: models.Page.title
+
+      Required. Title is the main identifier for the page.
+
+      * `CharField <http://docs.djangoproject.com/en/dev/ref/models/fields/#charfield>`_
+      * max_length is 255
+      * must be unique
+
+   .. attribute:: Page.slug
+
+      Required. Slug is used for the URL for each page.
+
+      * `SlugField <http://docs.djangoproject.com/en/dev/ref/models/fields/#slugfield>`_
+      * must be unique
+
+   .. attribute:: models.Page.tags
+
+      Required. A TagField.  See :ref:`django-tagging-dep`.
+
+   .. attribute:: models.Page.creator
+
+      A User from Django's auth

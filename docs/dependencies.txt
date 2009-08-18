@@ -1,0 +1,10 @@
+Dependencies
+============
+
+.. _django-tagging-dep:
+
+Django-Tagging
+--------------
+    
+    A generic tagging application for Django projects, which allows association of a number of tags with any Model instance and makes retrieval of tags simple. `Django-Tagging <http://code.google.com/p/django-tagging/>`_
+
