@@ -1,5 +1,5 @@
 from django.contrib import admin
-from vz_wiki.models import Page, Revision, Comparison
+from models import Page, Revision, Comparison
 
 def latest_revision_display(obj):
     latest_revision = obj.latest_revision()

@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from vz_wiki.models import Page, Revision
+from models import Page, Revision
 
 class PageForm(ModelForm):
     class Meta:

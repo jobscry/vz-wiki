@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from vz_wiki.models import Page
+from models import Page
 
 urlpatterns = patterns('vz_wiki.views',
     url(r'^page/create/$', 'create_page', name='create_page'),

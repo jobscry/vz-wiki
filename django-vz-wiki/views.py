@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
-from vz_wiki.models import Page, Revision
-from vz_wiki.forms import PageForm, RevisionForm
-from vz_wiki.exceptions import RevisionDoesNotExist
+from models import Page, Revision
+from forms import PageForm, RevisionForm
+from exceptions import RevisionDoesNotExist
 
 def compare_revisions(request, page_id):
     """
