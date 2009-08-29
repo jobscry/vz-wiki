@@ -30,7 +30,7 @@ def compare_revisions(request, page_id):
     except RevisionDoesNotExist:
         raise Http404
     return render_to_response(
-        'compare_revisions.html',
+        'vz_wiki/compare_revisions.html',
         {
             'page': page,
             'comparison': comparison,
@@ -49,7 +49,7 @@ def page_history(request, page_id):
     """
     page = get_object_or_404(Page, pk=page_id)
     return render_to_response(
-        'page_history.html',
+        'vz_wiki/page_history.html',
         { 'page': page, },
         context_instance=RequestContext(request)
     ) 
@@ -113,7 +113,7 @@ def edit_page(request, page_id):
         form = RevisionForm(instance=revision)
 
     return render_to_response(
-        'edit_page.html',
+        'vz_wiki/edit_page.html',
         {
             'form': form,
             'page': page,
@@ -143,7 +143,7 @@ def create_page(request):
         form = PageForm()
 
     return render_to_response(
-        'create_page.html',
+        'vz_wiki/create_page.html',
         { 'form': form },
         context_instance=RequestContext(request)
     )
