@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from models import Page
 
-urlpatterns = patterns('vz_wiki.views',
+urlpatterns = patterns('django_vz_wiki.views',
     url(r'^page/create/$', 'create_page', name='create_page'),
     url(r'^page/edit/(?P<page_id>\d+)/$', 'edit_page', name='edit_page'),
     url(r'^page/abandon/(?P<revision_id>\d+)/$', 'abandon_revision', name='abandon_revision'),
@@ -19,7 +19,7 @@ urlpatterns += patterns('django.views.generic',
         'list_detail.object_detail',
         {
             'queryset': Page.objects.all(),
-            'template_name': 'page_detail.html',
+            'template_name': 'vz_wiki/page_detail.html',
             'template_object_name': 'page',
         },
         name='page_detail',
@@ -29,7 +29,7 @@ urlpatterns += patterns('django.views.generic',
         'list_detail.object_list',
         {
             'queryset': Page.objects.all(),
-            'template_name': 'page_list.html',
+            'template_name': 'vz_wiki/page_list.html',
             'template_object_name': 'page',
         },
         name='page_list',
