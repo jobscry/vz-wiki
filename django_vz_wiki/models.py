@@ -78,7 +78,7 @@ class Page(models.Model):
         except Revision.DoesNotExist:
             return None
 
-    def compare(self, rev1, rev2, display_type='inline'):
+    def compare(self, rev1, rev2):
         if rev1 == rev2:
             raise ComparingSameRevision
         revisions = Revision.objects.filter(page=self, pk__in=sorted([rev1, rev2]))
@@ -89,7 +89,6 @@ class Page(models.Model):
             page=self,
             rev1=revisions[0],
             rev2=revisions[1],
-            display_type=display_type
         )
         return comparison
         
@@ -192,50 +191,20 @@ pre_save.connect(check_revision_already_published, sender=Revision)
 pre_save.connect(update_published_on, sender=Revision)
 
 class Comparison(models.Model):
-    DISPLAY_TYPE_CHOICES = (
-        (u'inline', 'Inline'),
-        (u'table', 'Table'),    
-    )
-
     page = models.ForeignKey(Page)
     rev1 = models.ForeignKey(Revision, related_name='rev1')
     rev2 = models.ForeignKey(Revision, related_name='rev2')
-    display_type = models.CharField(max_length='6', choices=DISPLAY_TYPE_CHOICES, default='inline')
     diff_text = models.TextField(default='blank')
     
     def __unicode__(self):
-        return u'%s: [%s] %s vs %s' % (self.page.title, self.display_type, self.rev1.pk, self.rev2.pk)
+        return u'%s: %s vs %s' % (self.page.title, self.rev1.pk, self.rev2.pk)
 
 def comparison_calculate_diff(sender, instance, created, **kwargs):
-    if created:
-        if instance.display_type == 'inline':
-            instance.diff_text = calculate_inline_diff(instance.rev1.body, instance.rev2.body)
-        else:
-            instance.diff_text = calculate_table_diff(instance.rev1.body, instance.rev2.body)
-        instance.save()
+    from utils.diff_match_patch import diff_match_patch
+    diff = diff_match_patch()
+    diff_array = diff.diff_main(instance.rev1.body, instance.rev2.body)
+    diff.diff_cleanupSemantic(diff_array)
+    instance.diff_text = diff.diff_prettyHtml(diff_array)
+    instance.save()
         
 post_save.connect(comparison_calculate_diff, sender=Comparison)
-
-def calculate_inline_diff(text1, text2):
-    """from http://stackoverflow.com/questions/774316/python-difflib-highlighting-differences-inline/788780#788780"""
-    seqm = difflib.SequenceMatcher(None, text1, text2)
-    output = []
-    for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
-        if opcode == 'equal':
-            output.append(seqm.a[a0:a1])
-        elif opcode == 'insert':
-            output.append('<ins>'+seqm.b[b0:b1]+'</ins>')
-        elif opcode == 'delete':
-            output.append('<del>'+seqm.a[a0:a1]+'</del>')
-        elif opcode == 'replace':
-            pass
-        else:
-            raise RuntimeError, "unexpected code"
-    return u''.join(output)
-
-def calculate_table_diff(text1, text2):
-    """
-    TODO:  table doesn't wrap, is this a Python problem?
-    """
-    html_differ = difflib.HtmlDiff(wrapcolumn=10)
-    return html_differ.make_table(text1.splitlines(), text2.splitlines())

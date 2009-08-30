@@ -17,6 +17,6 @@
 
 {% block page_body %}
 
-{{ comparison.diff_text|sanitize:'ins del'|markdown }}
+{{ comparison.diff_text|sanitize:'ins:title:style del:title:style br'|markdown }}
 
 {% endblock %}
