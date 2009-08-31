@@ -2,6 +2,12 @@
 
 {% load markup %}
 
+{% block javascript %}
+<script type="text/javascript">
+{% include "vz_wiki/slug.js" %}
+</script>
+{% endblock %}
+
 {% block page_title %}Create Page{% endblock %}
 
 {% block page_body %}
