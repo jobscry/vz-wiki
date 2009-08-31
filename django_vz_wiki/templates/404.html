@@ -1,0 +1,16 @@
+{% extends "vz_wiki/base.html" %}
+
+{% load markup wiki_tags %}
+
+{% block page_title %}
+Page Not Found
+{% endblock %}
+
+{% block page_body %}
+
+<h3>Whoops...</h3>
+
+<p>The page you were looking for at <em>{{request_path }}</em> was 
+not found.</p>
+
+{% endblock %}
