@@ -2,7 +2,11 @@
 
 {% load markup wiki_tags %}
 
-{% block page_title %}{{ page.title }}{% endblock %}
+{% block page_title %}
+    {% ifnotequal page.title 'index' %}
+{{ page.title|title }}
+    {% endifnotequal %}
+{% endblock %}
 
 {% block vz_wiki_page_options %}
     {% if perms.page.can_change and page.is_editable and not page.is_checked_out %}
@@ -17,7 +21,7 @@
 {% endblock %}
 
 {% block page_body %}
-<div class="page-info">
+<div class="page-info alt">
     <p>Created on: {{ page.created_on|date }}.  Current version is {{ page.latest_revision.number }}.</p>
     <p>Page is {% if not page.is_editable %}not{% endif %} editable.</p>
     {% if page.is_checked_out %}

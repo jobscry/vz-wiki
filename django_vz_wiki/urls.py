@@ -37,6 +37,7 @@ urlpatterns += patterns('django.views.generic',
     url(
         r'^$',
         'simple.redirect_to',
-        { 'url': '/index/' },
+        { 'url': '/wiki/index/' },
+        name='index',
     ),
 )
