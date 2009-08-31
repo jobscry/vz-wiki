@@ -25,7 +25,7 @@ urlpatterns += patterns('django.views.generic',
         name='page_detail',
     ),
     url(
-        r'^$',
+        r'^pages:index/$',
         'list_detail.object_list',
         {
             'queryset': Page.objects.all(),
@@ -33,5 +33,10 @@ urlpatterns += patterns('django.views.generic',
             'template_object_name': 'page',
         },
         name='page_list',
+    ),
+    url(
+        r'^$',
+        'simple.redirect_to',
+        { 'url': '/index/' },
     ),
 )
