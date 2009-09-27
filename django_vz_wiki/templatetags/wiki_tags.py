@@ -1,11 +1,11 @@
-from django.template.defaultfilters import stringfilter
+from django.conf import settings
 from django import template
+from django.template.defaultfilters import stringfilter
 
 from BeautifulSoup import BeautifulSoup, Comment
 
 import re
 
-WIKI_BASE = '/wiki'
 wiki_link_pattern = re.compile('\[\[([^\]]+)\]\]')
 white_space_pattern = re.compile('\s+')
 
@@ -27,10 +27,10 @@ def get_link(match_obj):
     """
     text = match_obj.group(0)[2:-2]
     slug = white_space_pattern.sub('-', text.lower())
-    return u'<a href="%s/%s" title="%s">%s</a>' % (WIKI_BASE, slug, text, text)
+    return u'<a href="%s/%s" title="%s">%s</a>' % (settings.WIKI_BASE, slug, text, text)
 
 @register.filter
-def sanitize(value, allowed_tags):
+def sanitize(value, allowed_tags=settings.WIKI_ALLOWED_TAGS):
     """
     Jacked from: http://www.djangosnippets.org/snippets/1655/
     

@@ -28,5 +28,5 @@
     <p>Page is currently checked out by {{ page.who_checked_out }}.</p>
     {% endif %}
 </div>
-{% autoescape on %}{{ page.latest_revision.body|striptags|wiki_link|markdown }}{% endautoescape %}
+{{ page.latest_revision.body|sanitize|wiki_link|markdown }}
 {% endblock %}
