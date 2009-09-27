@@ -30,7 +30,7 @@ def get_link(match_obj):
     return u'<a href="%s/%s" title="%s">%s</a>' % (settings.WIKI_BASE, slug, text, text)
 
 @register.filter
-def sanitize(value, allowed_tags=settings.WIKI_ALLOWED_TAGS):
+def sanitize(value, allowed_tags=None):
     """
     Jacked from: http://www.djangosnippets.org/snippets/1655/
     
@@ -38,6 +38,12 @@ def sanitize(value, allowed_tags=settings.WIKI_ALLOWED_TAGS):
     are allowed HTML tags, and attrs are the allowed attributes for that tag.
     """
     js_regex = re.compile(r'[\s]*(&#x.{1,7})?'.join(list('javascript')))
+
+    if allowed_tags is None:
+        allowed_tags = settings.WIKI_ALLOWED_TAGS
+    else:
+        allowed_tags = '%s %s'%(allowed_tags, settings.WIKI_ALLOWED_TAGS)
+
     allowed_tags = [tag.split(':') for tag in allowed_tags.split()]
     allowed_tags = dict((tag[0], tag[1:]) for tag in allowed_tags)
 
