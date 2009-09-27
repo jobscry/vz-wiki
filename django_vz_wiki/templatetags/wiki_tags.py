@@ -7,7 +7,7 @@ from BeautifulSoup import BeautifulSoup, Comment
 import re
 
 wiki_link_pattern = re.compile('\[\[([^\]]+)\]\]')
-white_space_pattern = re.compile('\s+')
+white_space_pattern = re.compile('[^\w]+')
 
 register = template.Library()
 
