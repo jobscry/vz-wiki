@@ -114,28 +114,29 @@ def edit_page(request, page_id):
         if page.who_checked_out() != request.user:
             request.user.message_set.create(message='This page is already checked out.')
             return redirect(page)
-        revision = page.unpublished_revision()
+        unpublished_revision = page.unpublished_revision()
     else:
-        revision = page.check_out(user=request.user)
+        unpublished_revision = page.check_out(user=request.user)
 
     if request.method == 'POST':
-        form = RevisionForm(request.POST, instance=revision)
+        form = RevisionForm(request.POST, instance=unpublished_revision)
         if form.is_valid():
-            revision = form.save(commit=False)
-            if revision.is_published:
-                revision.publish()
+            unpublished_revision = form.save(commit=False)
+            if unpublished_revision.is_published:
+                unpublished_revision.publish()
                 request.user.message_set.create(message="Revision published.")
                 return redirect(page)
             else:
-                revision.save()
+                unpublished_revision.save()
     else:
-        form = RevisionForm(instance=revision)
+        form = RevisionForm(instance=unpublished_revision)
 
     return render_to_response(
         'vz_wiki/edit_page.html',
         {
             'form': form,
             'page': page,
+            'unpublished_revision': unpublished_revision,
         },
         context_instance=RequestContext(request)
     )       

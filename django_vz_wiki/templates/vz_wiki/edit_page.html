@@ -1,14 +1,10 @@
 {% extends "vz_wiki/base.html" %}
 
-{% load markup %}
-
 {% block page_title %}Editing Page &gt; {{ page.title }}{% endblock %}
 
 {% block vz_wiki_page_options %}
-    {% if perms.page.can_change and page.is_editable and page.is_checked_out %}
-        {% ifequal page.who_checked_out user %}
-<li><a href="{% url abandon_revision page.unpublished_revision.pk %}" title="abandon revision">Abandon Revision</a></li>
-        {% endifequal %}
+    {% if perms.page.can_change %}
+<li><a href="{% url abandon_revision unpublished_revision.pk %}" title="abandon revision">Abandon Revision</a></li>
     {% endif %}
 {% endblock %}
 
