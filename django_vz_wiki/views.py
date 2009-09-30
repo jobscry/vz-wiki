@@ -2,9 +2,28 @@ from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
+from tagging.models import TaggedItem
+from tagging.utils import parse_tag_input
 from models import Page, Revision
 from forms import PageForm, RevisionForm
 from exceptions import RevisionDoesNotExist
+
+def page_tags(request):
+    tags_string = request.GET.get('tags', None)
+    if tags_string is not None:
+        tag_list = parse_tag_input(tags_string)
+        page_list = TaggedItem.objects.get_union_by_model(Page, tags_string)
+    else:
+        page_list = None
+        tag_list = None
+    return render_to_response(
+        'vz_wiki/page_tags.html',
+        {
+            'page_list': page_list,
+            'tag_list': tag_list,
+        },
+        context_instance=RequestContext(request)
+    )      
 
 def compare_revisions(request, page_id):
     """

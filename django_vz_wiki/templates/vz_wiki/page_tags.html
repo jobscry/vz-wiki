@@ -1,0 +1,21 @@
+{% extends "vz_wiki/base.html" %}
+
+{% block page_title %}Tags{% endblock %}
+
+{% block page_body %}
+    {% load tagging_tags humanize %}
+    {% if page_list %}
+<h4>{{ page_list.count|apnumber|title }} Pages tagged <em>{{ tag_list|join:", " }}</em>:</h4>
+<ul>
+        {% for page in page_list %}
+        <li><a href="{{ page.get_absolute_url }}" title="{{ page }}">{{ page }}</a></li>                
+        {% endfor %}
+    </ul>
+    <h4>All Tags</h4>
+    {% endif %}
+    {% tag_cloud_for_model django_vz_wiki.page as tag_list %}
+    <p class="tag_cloud">
+    {% for tag in tag_list %}
+    <a class="tag step_{{ tag.font_size }}" href="{% url page_tags %}?tags={{ tag.name|urlize }}" rel="tag" title="{{ tag }}">{{ tag }} ({{tag.count}})</a> 
+    {% endfor %}
+{% endblock %}
