@@ -19,7 +19,7 @@ urlpatterns += patterns('django.views.generic',
         r'^(?P<slug>[\w\-]+)/$',
         'list_detail.object_detail',
         {
-            'queryset': Page.objects.all(),
+            'queryset': Page.objects.select_related().all(),
             'template_name': 'vz_wiki/page_detail.html',
             'template_object_name': 'page',
         },

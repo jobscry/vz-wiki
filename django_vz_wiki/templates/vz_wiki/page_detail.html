@@ -28,11 +28,13 @@
     <a href="{% url page_tags %}?tags={{ tag|urlize }}" rel="tag" title="{{ tag }}">{{ tag }}</a> 
     {% endfor %}
     </p>
-    <p>Created on: {{ page.created_on|date }}.  Current version is {{ page.latest_revision.number }}.</p>
+    {% with page.latest_revision as latest_revision %}
+    <p>Created on: {{ page.created_on|date }}.  Current version is {{ latest_revision.number }}.</p>
     <p>Page is {% if not page.is_editable %}not{% endif %} editable.</p>
     {% if page.is_checked_out %}
     <p>Page is currently checked out by {{ page.who_checked_out }}.</p>
     {% endif %}
 </div>
-{{ page.latest_revision.body|sanitize|wiki_link|markdown }}
+{{ latest_revision.body|sanitize|wiki_link|markdown }}
+    {% endwith %}
 {% endblock %}
