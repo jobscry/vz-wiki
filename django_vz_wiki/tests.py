@@ -39,5 +39,3 @@ class WikiTestCase(unittest.TestCase):
             page1.check_out(user=self.user2)
             self.failUnlessRaises(PageAlreadyCheckedOut, page1.check_out, self.user)
             page2 = random.choice(self.pages)
-            
-            
