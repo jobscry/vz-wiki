@@ -22,6 +22,10 @@ Add the follwing to *INSTALED_APPS*
 Integration Into Existing Templates
 -----------------------------------
 
+**Be sure to uncomment the the egg based templated loader in *TEMPLATE_LOADERS***
+
+`django.template.loaders.eggs.load_template_source`
+
 All wiki templates have the following:
 
 `{% extends "base.html" %}`
