@@ -8,6 +8,10 @@ from tagging.fields import TagField
 import datetime
 import difflib
 
+#import logging
+#logger = logging.getLogger('vz_wiki_logger')
+#logger.setLevel(logging.DEBUG)
+
 class Page(models.Model):
     """
     Wiki pages are unique by title and slug.
@@ -144,14 +148,14 @@ def create_first_revision(sender, instance, created, **kwargs):
             is_published=True,
         )
 
-def check_page_already_checked_out(sender, instance, **kwargs):
+def check_page_already_checked_out(page_new, page_old):
     """Checks to see if page is checked out, can't be checked out again."""
-    if instance.is_checked_out and Page.objects.filter(pk=instance.pk, is_checked_out=True).count() > 0:
+    if page_old is not None and page_new.is_checked_out and page_old.is_checked_out is True:
         raise PageAlreadyCheckedOut
    
-def check_page_unpublished_revisions(sender, instance, **kwargs):
+def check_page_unpublished_revisions(page_new):
     """Before a page is checked in there can be no unpublished revisions"""
-    if not instance.is_checked_out and Revision.objects.filter(page=instance, is_published=False).count() > 0:
+    if not page_new.is_checked_out and Revision.objects.filter(page=page_new, is_published=False).count() > 0:
         raise UnpublishedRevisionExists
 
 def check_revision_already_published(sender, instance, **kwargs):
@@ -184,9 +188,14 @@ def update_published_on(sender, instance, **kwargs):
             instance.published_on = published_on
             instance.number = number
 
+def page_pre_save_maintenance(sender, instance, **kwargs):
+    if instance.pk:
+        page_old = Page.objects.get(pk=instance.pk)
+        check_page_already_checked_out(instance, page_old)
+        check_page_unpublished_revisions(instance)
+
 post_save.connect(create_first_revision, sender=Page)
-pre_save.connect(check_page_already_checked_out, sender=Page)
-pre_save.connect(check_page_unpublished_revisions, sender=Page)
+pre_save.connect(page_pre_save_maintenance, sender=Page)
 pre_save.connect(check_revision_already_published, sender=Revision)
 pre_save.connect(update_published_on, sender=Revision)
 

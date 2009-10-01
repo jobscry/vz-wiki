@@ -4,7 +4,7 @@ from models import Page, Revision
 class PageForm(ModelForm):
     class Meta:
         model = Page
-        exclude = ['creator',]
+        exclude = ['creator', 'is_checked_out']
 
 class RevisionForm(ModelForm):
     class Meta:
