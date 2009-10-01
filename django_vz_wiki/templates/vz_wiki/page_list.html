@@ -1,10 +1,12 @@
 {% extends "vz_wiki/base.html" %}
 
+{% load humanize %}
+
 {% block page_title %}Index{% endblock %}
 
 {% block page_body %}
     {% with page_list.count as page_list_count %}
-<h3>{{ page_list_count }} page{{ page_list_count|pluralize }}</h3>
+<h3>{{ page_list_count|apnumber|title }} page{{ page_list_count|pluralize }}</h3>
     {% endwith %}
 <ol>
 {% for page in page_list %}
