@@ -190,8 +190,7 @@ def update_published_on(sender, instance, **kwargs):
 
 def page_pre_save_maintenance(sender, instance, **kwargs):
     if instance.pk:
-        page_old = Page.objects.get(pk=instance.pk)
-        check_page_already_checked_out(instance, page_old)
+        check_page_already_checked_out(instance, Page.objects.get(pk=instance.pk))
         check_page_unpublished_revisions(instance)
 
 post_save.connect(create_first_revision, sender=Page)
