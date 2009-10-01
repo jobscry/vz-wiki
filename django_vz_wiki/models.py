@@ -204,11 +204,12 @@ class Comparison(models.Model):
         return u'%s: %s vs %s' % (self.page.title, self.rev1.pk, self.rev2.pk)
 
 def comparison_calculate_diff(sender, instance, created, **kwargs):
-    from utils.diff_match_patch import diff_match_patch
-    diff = diff_match_patch()
-    diff_array = diff.diff_main(instance.rev1.body, instance.rev2.body)
-    diff.diff_cleanupSemantic(diff_array)
-    instance.diff_text = diff.diff_prettyHtml(diff_array)
-    instance.save()
+    if created:
+        from utils.diff_match_patch import diff_match_patch
+        diff = diff_match_patch()
+        diff_array = diff.diff_main(instance.rev1.body, instance.rev2.body)
+        diff.diff_cleanupSemantic(diff_array)
+        instance.diff_text = diff.diff_prettyHtml(diff_array)
+        instance.save()
         
 post_save.connect(comparison_calculate_diff, sender=Comparison)
