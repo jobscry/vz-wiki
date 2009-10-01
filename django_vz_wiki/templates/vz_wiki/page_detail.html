@@ -2,13 +2,13 @@
 
 {% load markup wiki_tags tagging_tags %}
 
-{% block page_title %}
+{% block content_title %}
     {% ifnotequal page.title 'index' %}
 {{ page.title|title }}
     {% endifnotequal %}
 {% endblock %}
 
-{% block vz_wiki_page_options %}
+{% block vz_wiki_page_menu %}
     {% if perms.page.can_change and page.is_editable and not page.is_checked_out %}
 <li><a href="{% url edit_page page.pk %}" title="edit this page">Edit This Page</a></li>
     {% endif %}
@@ -20,7 +20,7 @@
 <li><a href="{% url page_history page.pk %}" title="page history">Page History</a></li>
 {% endblock %}
 
-{% block page_body %}
+{% block content %}
 <div class="page-info alt">
     {% tags_for_object page as tags_list %}
     <p>Tagged: 

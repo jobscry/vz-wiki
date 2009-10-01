@@ -1,12 +1,12 @@
 {% extends "vz_wiki/base.html" %}
 
-{% block page_title %}{{ page.title }}{% endblock %}
+{% block content_title %}{{ page.title }}{% endblock %}
 
-{% block vz_wiki_page_options %}
+{% block vz_wiki_page_menu %}
 <li><a href="{% url page_detail page.slug %}" title="return to page">Return to Page</a></li>
 {% endblock %}
 
-{% block page_body %}
+{% block content %}
 <h3>History</h3>
 <form method="GET" action="{% url compare_revisions page.pk %}">
 <p><input type="submit" value="compare"></p>

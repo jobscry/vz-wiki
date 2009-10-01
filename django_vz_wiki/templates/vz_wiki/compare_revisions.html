@@ -2,21 +2,19 @@
 
 {% load markup wiki_tags %}
 
-{% block extra_css %}
+{% block extra_head %}
 <link href="{{ MEDIA_URL }}css/vz_wiki.css" rel="stylesheet">
 {% endblock %}
 
-{% block page_title %}
+{% block content_title %}
 {{ page.title }} &gt; #{{ comparison.rev1.pk }} vs. #{{ comparison.rev2.pk }}
 {% endblock %}
 
-{% block vz_wiki_page_options %}
+{% block vz_wiki_page_menu %}
 <li><a href="{% url page_detail page.slug %}" title="return to page">Return to Page</a></li>
 <li><a href="{% url page_history page.pk %}" title="return to page">Return to Page History</a></li>
 {% endblock %}
 
-{% block page_body %}
-
+{% block content %}
 {{ comparison.diff_text|sanitize:'ins:title:style del:title:style'|markdown }}
-
 {% endblock %}

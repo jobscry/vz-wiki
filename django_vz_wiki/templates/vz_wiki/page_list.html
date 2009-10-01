@@ -2,9 +2,9 @@
 
 {% load humanize %}
 
-{% block page_title %}Index{% endblock %}
+{% block content_title %}Index{% endblock %}
 
-{% block page_body %}
+{% block content %}
     {% with page_list.count as page_list_count %}
 <h3>{{ page_list_count|apnumber|title }} page{{ page_list_count|pluralize }}</h3>
     {% endwith %}

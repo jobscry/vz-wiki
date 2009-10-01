@@ -1,8 +1,8 @@
 {% extends "vz_wiki/base.html" %}
 
-{% block page_title %}Tags{% endblock %}
+{% block content_title %}Tags{% endblock %}
 
-{% block page_body %}
+{% block content %}
     {% load tagging_tags humanize %}
     {% if page_list %}
 <h4>{{ page_list.count|apnumber|title }} Pages tagged <em>{{ tag_list|join:", " }}</em>:</h4>

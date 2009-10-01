@@ -1,14 +1,14 @@
 {% extends "vz_wiki/base.html" %}
 
-{% block page_title %}Editing Page &gt; {{ page.title }}{% endblock %}
+{% block content_title %}Editing Page &gt; {{ page.title }}{% endblock %}
 
-{% block vz_wiki_page_options %}
+{% block vz_wiki_page_menu %}
     {% if perms.page.can_change %}
 <li><a href="{% url abandon_revision unpublished_revision.pk %}" title="abandon revision">Abandon Revision</a></li>
     {% endif %}
 {% endblock %}
 
-{% block page_body %}
+{% block content %}
 <h3>Edit Page</h3>
 <form method="POST" action="{% url edit_page page.pk %}">
 {{ form.as_p }}

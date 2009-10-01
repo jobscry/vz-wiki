@@ -2,15 +2,15 @@
 
 {% load markup %}
 
-{% block javascript %}
+{% block extra_head %}
 <script type="text/javascript">
 {% include "vz_wiki/slug.js" %}
 </script>
 {% endblock %}
 
-{% block page_title %}Create Page{% endblock %}
+{% block content_title %}Create Page{% endblock %}
 
-{% block page_body %}
+{% block content %}
 <h3>Create page</h3>
 <form method="POST" action="{% url create_page %}">
 {{ form.as_p }}
