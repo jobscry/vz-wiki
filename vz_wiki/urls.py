@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from models import Page
 
-urlpatterns = patterns('django_vz_wiki.views',
+urlpatterns = patterns('vz_wiki.views',
     url(r'^pages:create/$', 'create_page', name='create_page'),
     url(r'^pages:edit/(?P<page_id>\d+)/$', 'edit_page', name='edit_page'),
     url(r'^pages:abandon/(?P<revision_id>\d+)/$', 'abandon_revision', name='abandon_revision'),

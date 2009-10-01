@@ -10,5 +10,5 @@ setup(
     long_description=open('README.markdown').read(),
     url = "http://jobscry.net/projects/#vz_wiki",
     download_url = "http://github.com/jobscry/vz-wiki",
-    include_package_data = True
+    include_package_data = False
 )
