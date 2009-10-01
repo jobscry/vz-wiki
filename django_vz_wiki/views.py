@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
-from tagging.models import TaggedItem
+from tagging.models import Tag, TaggedItem
 from tagging.utils import parse_tag_input
 from models import Page, Revision
 from forms import PageForm, RevisionForm
@@ -121,6 +121,7 @@ def edit_page(request, page_id):
     if request.method == 'POST':
         form = RevisionForm(request.POST, instance=unpublished_revision)
         if form.is_valid():
+            Tag.objects.update_tags(page, form.cleaned_data['tags'])
             unpublished_revision = form.save(commit=False)
             if unpublished_revision.is_published:
                 unpublished_revision.publish()
@@ -129,7 +130,10 @@ def edit_page(request, page_id):
             else:
                 unpublished_revision.save()
     else:
-        form = RevisionForm(instance=unpublished_revision)
+        form = RevisionForm(
+            initial={ 'tags': page.tags},
+            instance=unpublished_revision,
+        )
 
     return render_to_response(
         'vz_wiki/edit_page.html',

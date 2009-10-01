@@ -8,10 +8,6 @@ from tagging.fields import TagField
 import datetime
 import difflib
 
-#import logging
-#logger = logging.getLogger('vz_wiki_logger')
-#logger.setLevel(logging.DEBUG)
-
 class Page(models.Model):
     """
     Wiki pages are unique by title and slug.
