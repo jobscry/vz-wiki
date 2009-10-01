@@ -2,7 +2,7 @@ import ez_setup
 ez_setup.use_setuptools()
 from setuptools import setup, find_packages
 setup(
-    name = "django-vz-wiki",
+    name = "django_vz_wiki",
     version=__import__('django_vz_wiki').__version__,
     packages=find_packages(exclude=['ez_setup']),
     author = "Joe Vasquez",
