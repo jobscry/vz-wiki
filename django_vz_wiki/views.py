@@ -17,7 +17,7 @@ def page_tags(request):
         page_list = None
         tag_list = None
     return render_to_response(
-        'vz_wiki/page_tags.html',
+        'django_vz_wikidjango_vz_wikivzdjango_vz_wiki/page_tags.html',
         {
             'page_list': page_list,
             'tag_list': tag_list,
@@ -49,7 +49,7 @@ def compare_revisions(request, page_id):
     except RevisionDoesNotExist:
         raise Http404
     return render_to_response(
-        'vz_wiki/compare_revisions.html',
+        'django_vz_wiki/compare_revisions.html',
         {
             'page': page,
             'comparison': comparison,
@@ -68,7 +68,7 @@ def page_history(request, page_id):
     """
     page = get_object_or_404(Page, pk=page_id)
     return render_to_response(
-        'vz_wiki/page_history.html',
+        'django_vz_wiki/page_history.html',
         { 'page': page, },
         context_instance=RequestContext(request)
     ) 
@@ -93,7 +93,7 @@ def abandon_revision(request, revision_id):
     request.user.message_set.create(message='Revision abandoned.')
     return redirect(page)
 
-abandon_revision = permission_required('vz_wiki.page.can_change')(abandon_revision)
+abandon_revision = permission_required('django_vz_wiki.page.can_change')(abandon_revision)
 
 def edit_page(request, page_id):
     """
@@ -136,7 +136,7 @@ def edit_page(request, page_id):
         )
 
     return render_to_response(
-        'vz_wiki/edit_page.html',
+        'django_vz_wiki/edit_page.html',
         {
             'form': form,
             'page': page,
@@ -145,7 +145,7 @@ def edit_page(request, page_id):
         context_instance=RequestContext(request)
     )       
             
-edit_page = permission_required('vz_wiki.page.can_change')(edit_page)    
+edit_page = permission_required('django_vz_wiki.page.can_change')(edit_page)    
 
 def create_page(request):
     """
@@ -167,8 +167,8 @@ def create_page(request):
         form = PageForm()
 
     return render_to_response(
-        'vz_wiki/create_page.html',
+        'django_vz_wiki/create_page.html',
         { 'form': form },
         context_instance=RequestContext(request)
     )
-create_page = permission_required('vz_wiki.page.can_add')(create_page)
+create_page = permission_required('django_vz_wiki.page.can_add')(create_page)
