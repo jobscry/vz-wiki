@@ -8,6 +8,7 @@ from models import Page, Revision
 from forms import PageForm, RevisionForm
 from exceptions import RevisionDoesNotExist
 
+
 def page_tags(request):
     tags_string = request.GET.get('tags', None)
     if tags_string is not None:
@@ -16,22 +17,18 @@ def page_tags(request):
     else:
         page_list = None
         tag_list = None
-    return render_to_response(
-        'vz_wiki/page_tags.html',
-        {
-            'page_list': page_list,
-            'tag_list': tag_list,
-        },
-        context_instance=RequestContext(request)
-    )      
+    return render_to_response('vz_wiki/page_tags.html',
+        {'page_list': page_list, 'tag_list': tag_list},
+        context_instance=RequestContext(request))
+
 
 def compare_revisions(request, page_id):
     """
     Compare revisions from page using Python's Difflib.
-    
+
     Page is page_id, revision number to compare are from GET.  Revision numbers
     are rev1 and rev2.
-    
+
     Templates: ``compare_revisions.html``
     Context:
         page
@@ -48,60 +45,57 @@ def compare_revisions(request, page_id):
         comparison = page.compare(rev1, rev2)
     except RevisionDoesNotExist:
         raise Http404
-    return render_to_response(
-        'vz_wiki/compare_revisions.html',
-        {
-            'page': page,
-            'comparison': comparison,
-        },
-        context_instance=RequestContext(request)
-    )     
+    return render_to_response('vz_wiki/compare_revisions.html',
+        {'page': page, 'comparison': comparison},
+        context_instance=RequestContext(request))
+
 
 def page_history(request, page_id):
     """
     List of page history.
-    
+
     Templates: ``page_history.html``
     Context:
         page
             Page object
     """
     page = get_object_or_404(Page, pk=page_id)
-    return render_to_response(
-        'vz_wiki/page_history.html',
-        { 'page': page, },
-        context_instance=RequestContext(request)
-    ) 
-    
+    return render_to_response('vz_wiki/page_history.html',
+        {'page': page},
+        context_instance=RequestContext(request))
+
 
 def abandon_revision(request, revision_id):
     """
     Abandons revision, deletes it without publishing it.
-    
+
     Redirects to revision's parent page.
-    
+
     Templates: none
     Context:
         none
     """
     revision = get_object_or_404(Revision, pk=revision_id, is_published=False)
     if revision.author != request.user:
-        return HttpResponseForbidden('You cannot abandon this revision, it does not belong to you.')
+        return HttpResponseForbidden(
+            'You cannot abandon this revision, it does not belong to you.')
     page = revision.page
     revision.delete()
     page.check_in()
     request.user.message_set.create(message='Revision abandoned.')
     return redirect(page)
 
-abandon_revision = permission_required('vz_wiki.page.can_change')(abandon_revision)
+abandon_revision = permission_required(
+    'vz_wiki.page.can_change')(abandon_revision)
+
 
 def edit_page(request, page_id):
     """
     Creates/saves/publishes a page's revision.
-    
-    If page is checked out and current user isn't the "checker outer", don't allow
-    edit.  Otherwise open the Page.unpublished_revision().
-    
+
+    If page is checked out and current user isn't the "checker outer",
+    don't allow edit.  Otherwise open the Page.unpublished_revision().
+
     Templates: ``edit_page.html``
     Context:
         page
@@ -112,7 +106,8 @@ def edit_page(request, page_id):
     page = get_object_or_404(Page, pk=page_id)
     if page.is_checked_out:
         if page.who_checked_out() != request.user:
-            request.user.message_set.create(message='This page is already checked out.')
+            request.user.message_set.create(
+                message='This page is already checked out.')
             return redirect(page)
         unpublished_revision = page.unpublished_revision()
     else:
@@ -130,27 +125,21 @@ def edit_page(request, page_id):
             else:
                 unpublished_revision.save()
     else:
-        form = RevisionForm(
-            initial={ 'tags': page.tags},
-            instance=unpublished_revision,
-        )
+        form = RevisionForm(initial={'tags': page.tags},
+            instance=unpublished_revision)
 
-    return render_to_response(
-        'vz_wiki/edit_page.html',
-        {
-            'form': form,
-            'page': page,
-            'unpublished_revision': unpublished_revision,
-        },
-        context_instance=RequestContext(request)
-    )       
-            
-edit_page = permission_required('vz_wiki.page.can_change')(edit_page)    
+    return render_to_response('vz_wiki/edit_page.html',
+        {'form': form, 'page': page,
+        'unpublished_revision': unpublished_revision},
+        context_instance=RequestContext(request))
+
+edit_page = permission_required('vz_wiki.page.can_change')(edit_page)
+
 
 def create_page(request):
     """
     Creates a new page.
-    
+
     Templates: ``create_page.html``
     Context:
         form
@@ -166,9 +155,7 @@ def create_page(request):
     else:
         form = PageForm()
 
-    return render_to_response(
-        'vz_wiki/create_page.html',
-        { 'form': form },
-        context_instance=RequestContext(request)
-    )
+    return render_to_response('vz_wiki/create_page.html',
+        {'form': form}, context_instance=RequestContext(request))
+
 create_page = permission_required('vz_wiki.page.can_add')(create_page)
