@@ -15,7 +15,11 @@ Installation
 
 `sudo easy_install django_vz_wiki`
 
-Add the follwing to *INSTALED_APPS*
+Add the following to *urls.py*
+
+`(r'^wiki/', include('vz_wiki.urls')),`
+
+Add the following to *INSTALED_APPS*
 
 `'django_vz_wiki',`
 
@@ -42,6 +46,22 @@ Template blocks include:
 * **block vz_wiki_page_menu** - this is required for page options, it should be wrapped
 inside `<ul></ul>`.
 
+Linking to Wiki Pages
+---------------------
+
+First, include *wiki_tags* template tags.
+
+`{% load markup wiki_tags %}`
+
+Second, link to the desired wiki page by putting something like the following inside
+your text:
+
+`Blah blah blah [[title of the wiki page]]`
+
+Finally, add the *wiki_link* filter like this:
+
+`{{ latest_revision.body|sanitize|wiki_link|markdown }}`
+
 Extra Template Stuff
 --------------------
 
@@ -52,10 +72,15 @@ You can add:
 This will add:
 
 `<ul>`
+
 `    <li><a href="{% url page_list %}" title="page list">Page List</a></li>`
+
 `    {% if perms.page.can_add %}`
+
 `    <li><a href="{% url create_page %}" title="create a page">Create a Page</a></li>`
+
 `    {% endif %}`
+
 `</ul>`
 
 You can also do this manually.
