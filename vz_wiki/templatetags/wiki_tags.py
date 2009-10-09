@@ -11,15 +11,18 @@ white_space_pattern = re.compile('[^\w]+')
 
 register = template.Library()
 
+
 @register.filter
 @stringfilter
 def wiki_link(text):
     """
-    Search text for [[link_me]], replace with <a href="WIKI_BASE/link_me">link_me</a>
+    Search text for [[link_me]], replace with
+    <a href="WIKI_BASE/link_me">link_me</a>
     """
     return wiki_link_pattern.sub(get_link, text)
 
 wiki_link.is_safe = True
+
 
 def get_link(match_obj):
     """
@@ -30,11 +33,12 @@ def get_link(match_obj):
     WIKI_BASE = getattr(settings, 'WIKI_BASE', 'wiki')
     return u'<a href="%s/%s" title="%s">%s</a>' % (WIKI_BASE, slug, text, text)
 
+
 @register.filter
 def sanitize(value, allowed_tags=None):
     """
     Jacked from: http://www.djangosnippets.org/snippets/1655/
-    
+
     Argument should be in form 'tag2:attr1:attr2 tag2:attr1 tag3', where tags
     are allowed HTML tags, and attrs are the allowed attributes for that tag.
     """
@@ -57,7 +61,8 @@ def sanitize(value, allowed_tags=None):
         if tag.name not in allowed_tags:
             tag.hidden = True
         else:
-            tag.attrs = [(attr, js_regex.sub('', val)) for attr, val in tag.attrs
+            tag.attrs = [(attr, js_regex.sub('', val)) for attr, val \
+                in tag.attrs
                          if attr in allowed_tags[tag.name]]
 
     return soup.renderContents().decode('utf8')
