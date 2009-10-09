@@ -13,7 +13,7 @@
     </ul>
     <h4>All Tags</h4>
     {% endif %}
-    {% tag_cloud_for_model django_vz_wiki.page as tag_list %}
+    {% tag_cloud_for_model vz_wiki.page as tag_list %}
     <p class="tag_cloud">
     {% for tag in tag_list %}
     <a class="tag step_{{ tag.font_size }}" href="{% url page_tags %}?tags={{ tag.name|urlize }}" rel="tag" title="{{ tag }}">{{ tag }} ({{tag.count}})</a> 
