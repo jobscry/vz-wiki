@@ -46,10 +46,17 @@ Template blocks include:
 * **block vz_wiki_page_menu** - this is required for page options, it should be wrapped
 inside `<ul></ul>`.
 
+Settings
+--------
+
+You can add default allowed tags.  By adding **WIKI_ALLOWED_TAGS** to your settings file.  The  setting should be in form 'tag2:attr1:attr2 tag2:attr1 tag3', where tags are allowed HTML tags, and attrs are the allowed attributes for that tag.  Default is an empty string.
+
+You can also change the default Wiki page link base (*/wiki*) by adding **WIKI_BASE** to your settings file.
+
 Linking to Wiki Pages
 ---------------------
 
-First, include *wiki_tags* template tags.
+First, include **wiki_tags** template tags.
 
 `{% load markup wiki_tags %}`
 

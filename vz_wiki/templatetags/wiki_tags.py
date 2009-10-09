@@ -27,7 +27,8 @@ def get_link(match_obj):
     """
     text = match_obj.group(0)[2:-2]
     slug = white_space_pattern.sub('-', text.lower())
-    return u'<a href="%s/%s" title="%s">%s</a>' % (settings.WIKI_BASE, slug, text, text)
+    WIKI_BASE = getattr(settings, 'WIKI_BASE', 'wiki')
+    return u'<a href="%s/%s" title="%s">%s</a>' % (WIKI_BASE, slug, text, text)
 
 @register.filter
 def sanitize(value, allowed_tags=None):
@@ -39,10 +40,11 @@ def sanitize(value, allowed_tags=None):
     """
     js_regex = re.compile(r'[\s]*(&#x.{1,7})?'.join(list('javascript')))
 
+    WIKI_ALLOWED_TAGS = getattr(settings, 'WIKI_ALLOWED_TAGS', '')
     if allowed_tags is None:
-        allowed_tags = settings.WIKI_ALLOWED_TAGS
+        allowed_tags = WIKI_ALLOWED_TAGS
     else:
-        allowed_tags = '%s %s'%(allowed_tags, settings.WIKI_ALLOWED_TAGS)
+        allowed_tags = '%s %s'%(allowed_tags, WIKI_ALLOWED_TAGS)
 
     allowed_tags = [tag.split(':') for tag in allowed_tags.split()]
     allowed_tags = dict((tag[0], tag[1:]) for tag in allowed_tags)
