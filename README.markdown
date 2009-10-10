@@ -3,13 +3,6 @@ VZ_WIKI
 
 VZ_Wiki is a Django powered wiki app.
 
-TODO
-----
-
-* Search
-* Tag filtering
-* File/Attachments
-
 Installation
 ------------
 
