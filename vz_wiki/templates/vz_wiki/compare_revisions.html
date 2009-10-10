@@ -16,5 +16,5 @@
 {% endblock %}
 
 {% block content %}
-{{ comparison.diff_text|sanitize:'ins:title:style del:title:style'|markdown }}
+{{ comparison.diff_text|sanitize:'ins:title:style del:title:style br'|markdown }}
 {% endblock %}
