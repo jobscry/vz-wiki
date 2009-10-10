@@ -74,7 +74,7 @@ Extra Template Stuff
 
 You can add:
 
-`{% block vz_wiki_page_menu %}{% endblock %}`
+`{% include 'vz_wiki/wiki_menu.html" %}`
 
 This will add:
 
