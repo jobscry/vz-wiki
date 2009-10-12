@@ -92,3 +92,4 @@ Dependencies
 * [Python Markdown](http://www.freewisdom.org/projects/python-markdown)
 * [Beautiful Soup](http://www.crummy.com/software/BeautifulSoup)
 * [Django Tagging](http://code.google.com/p/django-tagging/)
+* [Google Diff-Match-Patch](http://code.google.com/p/google-diff-match-patch/)
