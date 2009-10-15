@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import Page, Revision, Comparison
+from models import WikiPage, Revision, Comparison
 
 
 def latest_revision_display(obj):
@@ -40,15 +40,15 @@ class RevisionInline(admin.StackedInline):
     extra = 1
 
 
-class PageAdmin(admin.ModelAdmin):
+class WikiPageAdmin(admin.ModelAdmin):
     actions = [make_editable, make_not_editable, make_checked_in,
         make_checked_out]
     inlines = [RevisionInline]
     prepopulated_fields = {'slug': ('title', )}
     list_display = ('title', latest_revision_display, 'is_editable',
-        'is_checked_out', who_checked_out, 'created_on')
+        'is_checked_out', who_checked_out, 'created_on', 'edited_on')
     list_filter = ('is_editable', 'is_checked_out')
 
-admin.site.register(Page, PageAdmin)
+admin.site.register(WikiPage, WikiPageAdmin)
 admin.site.register(Revision)
 admin.site.register(Comparison)

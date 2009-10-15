@@ -5,11 +5,11 @@
 {% block content_title %}Index{% endblock %}
 
 {% block content %}
-    {% with page_list.count as page_list_count %}
+    {% with wikipage_list.count as page_list_count %}
 <h3>{{ page_list_count|apnumber|title }} page{{ page_list_count|pluralize }}</h3>
     {% endwith %}
 <ol>
-{% for page in page_list %}
+{% for page in wikipage_list %}
     <li><a href="{{ page.get_absolute_url }}" title="{{ page }}">{{ page }}</a></li>
 {% endfor %}
 </ol>

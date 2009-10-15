@@ -1,34 +1,34 @@
 from django.conf.urls.defaults import *
-from models import Page
+from models import WikiPage
 
 urlpatterns = patterns('vz_wiki.views',
-    url(r'^pages:create/$', 'create_page', name='create_page'),
-    url(r'^pages:edit/(?P<page_id>\d+)/$', 'edit_page', name='edit_page'),
+    url(r'^pages:create/$', 'create_page', name='create_wikipage'),
+    url(r'^pages:edit/(?P<page_id>\d+)/$', 'edit_page', name='edit_wikipage'),
     url(r'^pages:abandon/(?P<revision_id>\d+)/$', 'abandon_revision',
-        name='abandon_revision'),
-    url(r'^pages:tags', 'page_tags', name='page_tags'),
+        name='abandon_wikipage_revision'),
+    url(r'^pages:tags', 'page_tags', name='wikipage_tags'),
     url(r'^pages:history/(?P<page_id>\d+)/$', 'page_history',
-        name='page_history'),
+        name='wikipage_history'),
     url(
         r'^pages:compare\-revisions/(?P<page_id>\d+)/$',
-            'compare_revisions', name='compare_revisions'),
+            'compare_revisions', name='compare_wikipage_revisions'),
 )
 
 urlpatterns += patterns('django.views.generic',
     url(
         r'^(?P<slug>[\w\-]+)/$',
         'list_detail.object_detail',
-            {'queryset': Page.objects.select_related().all(),
+            {'queryset': WikiPage.objects.select_related().all(),
             'template_name': 'vz_wiki/page_detail.html',
-            'template_object_name': 'page', },
-        name='page_detail',
+            'template_object_name': 'wikipage', },
+        name='wikipage_detail',
     ),
     url(
         r'^pages:index/$',
-        'list_detail.object_list', {'queryset': Page.objects.all(),
+        'list_detail.object_list', {'queryset': WikiPage.objects.all(),
             'template_name': 'vz_wiki/page_list.html',
-            'template_object_name': 'page', },
-        name='page_list',
+            'template_object_name': 'wikipage', },
+        name='wikipage_list',
     ),
     url(
         r'^$',

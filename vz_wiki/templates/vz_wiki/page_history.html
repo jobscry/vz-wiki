@@ -3,15 +3,15 @@
 {% block content_title %}{{ page.title }}{% endblock %}
 
 {% block vz_wiki_page_menu %}
-<li><a href="{% url page_detail page.slug %}" title="return to page">Return to Page</a></li>
+<li><a href="{% url wikipage_detail wikipage.slug %}" title="return to page">Return to Page</a></li>
 {% endblock %}
 
 {% block content %}
 <h3>History</h3>
-<form method="GET" action="{% url compare_revisions page.pk %}">
+<form method="GET" action="{% url compare_wikipage_revisions wikipage.pk %}">
 <p><input type="submit" value="compare"></p>
 <ul>
-{% for revision in page.history %}
+{% for revision in wikipage.history %}
     <li>
     {% if forloop.first %}        
         <input type="radio" name="rev1" id="rev1" value="{{ revision.pk }}" checked="true"> 

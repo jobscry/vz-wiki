@@ -4,35 +4,35 @@
 
 {% block content_title %}
     {% ifnotequal page.title 'index' %}
-{{ page.title|title }}
+{{ wikipage.title|title }}
     {% endifnotequal %}
 {% endblock %}
 
 {% block vz_wiki_page_menu %}
-    {% if perms.page.can_change and page.is_editable and not page.is_checked_out %}
-<li><a href="{% url edit_page page.pk %}" title="edit this page">Edit This Page</a></li>
+    {% if perms.wikipage.can_change and wikipage.is_editable and not wikipage.is_checked_out %}
+<li><a href="{% url edit_wikipage wikipage.pk %}" title="edit this page">Edit This Page</a></li>
     {% endif %}
-    {% if page.is_checked_out %}
-        {% ifequal page.who_checked_out user %}
-<li><a href="{% url edit_page page.pk %}" title="continue editing page">Continue Editing Page</a></li>
+    {% if wikipage.is_checked_out %}
+        {% ifequal wikipage.who_checked_out user %}
+<li><a href="{% url edit_wikipage wikipage.pk %}" title="continue editing page">Continue Editing Page</a></li>
         {% endifequal %}
     {% endif %}
-<li><a href="{% url page_history page.pk %}" title="page history">Page History</a></li>
+<li><a href="{% url wikipage_history wikipage.pk %}" title="page history">Page History</a></li>
 {% endblock %}
 
 {% block content %}
 <div class="page-info alt">
-    {% tags_for_object page as tags_list %}
+    {% tags_for_object wikipage as tags_list %}
     <p>Tagged: 
     {% for tag in tags_list %}
-    <a href="{% url page_tags %}?tags={{ tag|urlize }}" rel="tag" title="{{ tag }}">{{ tag }}</a> 
+    <a href="{% url wikipage_tags %}?tags={{ tag|urlize }}" rel="tag" title="{{ tag }}">{{ tag }}</a> 
     {% endfor %}
     </p>
-    {% with page.latest_revision as latest_revision %}
-    <p>Created on: {{ page.created_on|date }}.  Current version is {{ latest_revision.number }}.</p>
-    <p>Page is {% if not page.is_editable %}not{% endif %} editable.</p>
-    {% if page.is_checked_out %}
-    <p>Page is currently checked out by {{ page.who_checked_out }}.</p>
+    {% with wikipage.latest_revision as latest_revision %}
+    <p>Created on: {{ wikipage.created_on|date }}.  Current version is {{ latest_revision.number }}.</p>
+    <p>Page is {% if not wikipage.is_editable %}not{% endif %} editable.</p>
+    {% if wikipage.is_checked_out %}
+    <p>Page is currently checked out by {{ wikipage.who_checked_out }}.</p>
     {% endif %}
 </div>
 {{ latest_revision.body|sanitize|wiki_link|markdown }}

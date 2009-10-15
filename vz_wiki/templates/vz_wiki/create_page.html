@@ -8,11 +8,11 @@
 </script>
 {% endblock %}
 
-{% block content_title %}Create Page{% endblock %}
+{% block content_title %}Create Wiki Page{% endblock %}
 
 {% block content %}
-<h3>Create page</h3>
-<form method="POST" action="{% url create_page %}">
+<h3>Create wiki page</h3>
+<form method="POST" action="{% url create_wikipage %}">
 {{ form.as_p }}
 <p><input type="submit" value="Create"></p>
 {% endblock %}

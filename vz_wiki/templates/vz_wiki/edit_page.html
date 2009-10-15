@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block content_title %}Editing Page &gt; {{ page.title }}{% endblock %}
+{% block content_title %}Editing Page &gt; {{ wikipage.title }}{% endblock %}
 
 {% block vz_wiki_page_menu %}
-    {% if perms.page.can_change %}
-<li><a href="{% url abandon_revision unpublished_revision.pk %}" title="abandon revision">Abandon Revision</a></li>
+    {% if perms.wikipage.can_change %}
+<li><a href="{% url abandon_wikipage_revision unpublished_revision.pk %}" title="abandon revision">Abandon Revision</a></li>
     {% endif %}
 {% endblock %}
 
 {% block content %}
-<h3>Edit Page</h3>
-<form method="POST" action="{% url edit_page page.pk %}">
+<h3>Edit Wiki Page</h3>
+<form method="POST" action="{% url edit_wikipage wikipage.pk %}">
 {{ form.as_p }}
 <p><input type="submit" value="Save"></p>
 {% endblock %}

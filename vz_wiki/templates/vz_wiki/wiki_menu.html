@@ -1,6 +1,6 @@
 <ul>
-    <li><a href="{% url page_list %}" title="page list">Page List</a></li>
-    {% if perms.page.can_add %}
-    <li><a href="{% url create_page %}" title="create a page">Create a Page</a></li>
+    <li><a href="{% url wikipage_list %}" title="wiki page list">Page List</a></li>
+    {% if perms.wikipage.can_add %}
+    <li><a href="{% url create_wikipage %}" title="create a wiki page">Create a Page</a></li>
     {% endif %}
 </ul>

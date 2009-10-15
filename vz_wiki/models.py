@@ -9,17 +9,17 @@ import datetime
 import difflib
 
 
-class Page(models.Model):
+class WikiPage(models.Model):
     """
     Wiki pages are unique by title and slug.
 
-    Pages are placeholder's for Revisions.  Each page can have many revisions.
+    WikiPages are placeholder's for Revisions.  Each page can have many revisions.
     Upon creation a default hello world page is created and published.
 
-    A Page can only have one unpublished Reversion.  A blank unpublished
-    Revision is created when a Page is checked out.
+    A WikiPage can only have one unpublished Reversion.  A blank unpublished
+    Revision is created when a WikiPage is checked out.
 
-    A Page cannot be checked in while an unblished Revision for it exists.
+    A WikiPage cannot be checked in while an unblished Revision for it exists.
     """
     title = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True)
@@ -28,17 +28,18 @@ class Page(models.Model):
     is_editable = models.BooleanField(default=True)
     is_checked_out = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
+    edited_on = models.DateTimeField(auto_now=True)
 
     def check_out(self, user):
         """
         Before checking a page out, check if page is already checked out.  If
-        the page is already checked out, raise PageAlreadyCheckedOut exception.
+        the page is already checked out, raise WikiPageAlreadyCheckedOut exception.
 
         If the page isn't checked out, create a skeleton revision, check out
         page.
         """
         if self.is_checked_out:
-            raise PageAlreadyCheckedOut
+            raise WikiPageAlreadyCheckedOut
         revision = Revision.objects.create(page=self, author=user,
             body=self.latest_revision().body)
         self.is_checked_out = True
@@ -96,7 +97,7 @@ class Page(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('page_detail', (), {'slug': self.slug})
+        return ('wikipage_detail', (), {'slug': self.slug})
 
     def __unicode__(self):
         return self.title
@@ -107,14 +108,14 @@ class Page(models.Model):
 
 class Revision(models.Model):
     """
-    All Revisions belong to a Page.
+    All Revisions belong to a WikiPage.
 
-    A Revision is created only when a Page is checked out.
+    A Revision is created only when a WikiPage is checked out.
 
     A Revision can only be deleted before it is published, once published it
     cannot be changed.
     """
-    page = models.ForeignKey(Page)
+    page = models.ForeignKey(WikiPage)
     author = models.ForeignKey(User)
     number = models.IntegerField(default=0, editable=False)
     body = models.TextField()
@@ -149,7 +150,7 @@ def check_page_already_checked_out(page_new, page_old):
     """Checks to see if page is checked out, can't be checked out again."""
     if page_old is not None and page_new.is_checked_out and \
         page_old.is_checked_out is True:
-        raise PageAlreadyCheckedOut
+        raise WikiPageAlreadyCheckedOut
 
 
 def check_page_unpublished_revisions(page_new):
@@ -195,17 +196,17 @@ def update_published_on(sender, instance, **kwargs):
 def page_pre_save_maintenance(sender, instance, **kwargs):
     if instance.pk:
         check_page_already_checked_out(instance,
-            Page.objects.get(pk=instance.pk))
+            WikiPage.objects.get(pk=instance.pk))
         check_page_unpublished_revisions(instance)
 
-post_save.connect(create_first_revision, sender=Page)
-pre_save.connect(page_pre_save_maintenance, sender=Page)
+post_save.connect(create_first_revision, sender=WikiPage)
+pre_save.connect(page_pre_save_maintenance, sender=WikiPage)
 pre_save.connect(check_revision_already_published, sender=Revision)
 pre_save.connect(update_published_on, sender=Revision)
 
 
 class Comparison(models.Model):
-    page = models.ForeignKey(Page)
+    page = models.ForeignKey(WikiPage)
     rev1 = models.ForeignKey(Revision, related_name='rev1')
     rev2 = models.ForeignKey(Revision, related_name='rev2')
     diff_text = models.TextField(default='blank')

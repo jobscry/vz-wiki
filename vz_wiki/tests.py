@@ -1,7 +1,7 @@
 import unittest
 import random
 from django.contrib.auth.models import User
-from vz_wiki.models import Page, Revision
+from vz_wiki.models import WikPage, Revision
 from vz_wiki.exceptions import *
 
 TEST_SIZE = 50
@@ -17,7 +17,7 @@ class WikiTestCase(unittest.TestCase):
             email='wiki_user@localhost')
         self.pages = []
         for x in range(TEST_SIZE):
-            self.pages.append(Page.objects.create(
+            self.pages.append(WikPage.objects.create(
                 title=u'test page number %s'%x,
                 slug=u'test-page-number-%s'%x, tags='test', creator=self.user))
 
@@ -34,6 +34,6 @@ class WikiTestCase(unittest.TestCase):
                     revivsion.publish)
                 page1.check_in()
             page1.check_out(user=self.user2)
-            self.failUnlessRaises(PageAlreadyCheckedOut,
+            self.failUnlessRaises(WikPageAlreadyCheckedOut,
                 page1.check_out, self.user)
             page2 = random.choice(self.pages)
