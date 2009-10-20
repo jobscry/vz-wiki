@@ -67,7 +67,7 @@ Extra Template Stuff
 
 You can add:
 
-`{% include 'vz_wiki/wiki_menu.html" %}`
+`{% include "vz_wiki/wiki_menu.html" %}`
 
 This will add:
 
