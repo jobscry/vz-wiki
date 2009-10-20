@@ -18,4 +18,5 @@
     {% for tag in tag_list %}
     <a class="tag step_{{ tag.font_size }}" href="{% url wikipage_tags %}?tags={{ tag.name|urlize }}" rel="tag" title="{{ tag }}">{{ tag }} ({{tag.count}})</a> 
     {% endfor %}
+	</p>
 {% endblock %}
