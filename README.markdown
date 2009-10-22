@@ -85,6 +85,14 @@ This will add:
 
 You can also do this manually.
 
+[Django Haystack](http://haystacksearch.org/ "Django Haystack") Integration
+---------------------------------------------------------------------------
+
+Honestly, I'm still wrapping my head around Haystack.  It's pretty awesome, just has 
+a bit of a learning curve for me.  That being said, I've added some basic integration.
+
+If your search index is setup for _auto discover_, your project will find _vz\_wiki.search\_indexes_. 
+
 Dependencies
 --------------
 
